@@ -1,7 +1,17 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { registerAPI, loginAPI } from "./authAPI";
 
-// 🔥 REGISTER
+// Safe parse
+const userFromStorage = (() => {
+  try {
+    const user = localStorage.getItem("user");
+    return user ? JSON.parse(user) : null;
+  } catch {
+    return null;
+  }
+})();
+
+// REGISTER
 export const registerUser = createAsyncThunk(
   "auth/register",
   async (userData, thunkAPI) => {
@@ -17,7 +27,7 @@ export const registerUser = createAsyncThunk(
   }
 );
 
-// 🔐 LOGIN
+// LOGIN
 export const loginUser = createAsyncThunk(
   "auth/login",
   async (userData, thunkAPI) => {
@@ -33,40 +43,28 @@ export const loginUser = createAsyncThunk(
   }
 );
 
-// 🔒 Safe localStorage parsing
-const loadUserFromStorage = () => {
-  try {
-    const user = localStorage.getItem("user");
-    return user ? JSON.parse(user) : null;
-  } catch (err) {
-    return null;
-  }
-};
-
 const authSlice = createSlice({
   name: "auth",
   initialState: {
-    user: loadUserFromStorage(),
+    user: userFromStorage,
     loading: false,
     error: null,
   },
   reducers: {
-    // 🚪 LOGOUT
     logout: (state) => {
       state.user = null;
       localStorage.removeItem("user");
     },
-    // ❌ CLEAR ERROR
     clearError: (state) => {
       state.error = null;
     },
   },
   extraReducers: (builder) => {
     builder
-      // ================= REGISTER =================
+
+      // REGISTER
       .addCase(registerUser.pending, (state) => {
         state.loading = true;
-        state.error = null;
       })
       .addCase(registerUser.fulfilled, (state, action) => {
         state.loading = false;
@@ -76,10 +74,10 @@ const authSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-      // ================= LOGIN =================
+
+      // LOGIN
       .addCase(loginUser.pending, (state) => {
         state.loading = true;
-        state.error = null;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;

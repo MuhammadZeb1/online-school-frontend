@@ -1,11 +1,13 @@
-import API from "../../services/axios.jsx";
+import API from "../../services/axios";
 
-export const registerAPI = async (data) => {
-  const res = await API.post("/auth/register", data);
-  return res.data;
+// REGISTER
+export const registerAPI = async (userData) => {
+  const { data } = await API.post("/auth/register", userData);
+  return data;
 };
 
-export const loginAPI = async (data) => {
-  const res = await API.post("/auth/login", data);
-  return res.data;
+// LOGIN
+export const loginAPI = async (userData) => {
+  const { data } = await API.post("/auth/login", userData);
+  return data;
 };
