@@ -33,19 +33,7 @@ const Navbar = () => {
 
         {user && (
           <>
-            {/* Role Based Dashboard */}
-            {user.role === "admin" ? (
-              <Link to="/admin/dashboard">Admin</Link>
-            ) : (
-              <Link to="/student/dashboard">Student</Link>
-            )}
-
-            {/* User Name */}
-            <span className="font-semibold">
-              {user.name}
-            </span>
-
-            {/* Logout */}
+            
             <button
               onClick={handleLogout}
               className="bg-red-500 px-3 py-1 rounded"
